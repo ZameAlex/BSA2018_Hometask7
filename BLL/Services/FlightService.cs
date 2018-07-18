@@ -105,5 +105,27 @@ namespace BSA2018_Hometask4.BLL.Services
             }
             
         }
+
+        public Task<List<FlightDto>> GetWithDelay(double delay)
+        {
+            var tcs = new TaskCompletionSource<List<FlightDto>>();
+
+            var timer = new System.Timers.Timer(delay);
+
+            timer.Elapsed += async (one, two) =>
+            {
+                try
+                {
+                    var flights = await Get();
+                    tcs.SetResult(flights);
+                }
+                catch(Exception e)
+                {
+                    tcs.SetException(e);
+                }
+            };
+            return tcs.Task;
+
+        }
     }
 }

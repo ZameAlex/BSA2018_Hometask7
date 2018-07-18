@@ -143,5 +143,19 @@ namespace BSA2018_Hometask4.Controllers
                 return NotFound(ex);
             }
         }
+
+        // GET: v1/api/flights/delay
+        [HttpGet("delay")]
+        public IActionResult Delay()
+        {
+            try
+            {
+                return Ok(service.GetWithDelay(50));
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex);
+            }
+        }
     }
 }

@@ -15,6 +15,8 @@ namespace BSA2018_Hometask4.BLL.Interfaces
         Task Delete(FlightDto flight);
         Task Update(FlightDto flight, int id);
         Task Update(DateTime departureTime, DateTime destinationTime, int id);
-        
+        Task<List<FlightDto>> GetWithDelay(double delay);
+
+
     }
 }
