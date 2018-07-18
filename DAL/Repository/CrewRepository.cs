@@ -22,5 +22,11 @@ namespace DAL.Repository
             DbContext.Crew.Update(temp);
             await base.Update(entity, id);
         }
+
+        public async Task CreateRange(List<Crew> crews)
+        {
+            await DbContext.Crew.AddRangeAsync(crews);
+            await DbContext.SaveChangesAsync();
+        }
     }
 }

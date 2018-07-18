@@ -2,6 +2,7 @@
 using BSA2018_Hometask4.BLL.Interfaces;
 using BSA2018_Hometask4.Shared.DTO;
 using BSA2018_Hometask4.Shared.Exceptions;
+using BSA2018_Hometask7.Shared.DTO.API;
 using DAL.Models;
 using DAL.Repository;
 using DAL.UnitOfWork;
@@ -10,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+
+using System.IO;
+using System.Linq;
 
 namespace BSA2018_Hometask4.BLL.Services
 {
@@ -33,7 +37,7 @@ namespace BSA2018_Hometask4.BLL.Services
                 return await unit.Crew.Create(await mapper.MapCrew(Crew));
             }
             else
-                throw new ValidationException(validationResult.Errors);
+                throw new FluentValidation.ValidationException(validationResult.Errors);
         }
 
         public async Task Delete(int id)
@@ -66,7 +70,7 @@ namespace BSA2018_Hometask4.BLL.Services
         {
             var validationResult = validator.Validate(Crew);
             if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
+                throw new FluentValidation.ValidationException(validationResult.Errors);
             try
             {
                 Crew.ID = id;
@@ -80,6 +84,26 @@ namespace BSA2018_Hometask4.BLL.Services
             {
                 throw;
             }
+        }
+
+        public async Task WriteToDB(List<APICrewDto> crews)
+        {
+            await (unit.Crew as CrewRepository).CreateRange(mapper.MapCrewApi(crews));
+        }
+
+        public async Task WriteToCsv(List<APICrewDto> crews)
+        {
+            using (TextWriter writer = new StreamWriter($"{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv"))
+            {
+                foreach (var crew in crews)
+                {
+                    await writer.WriteLineAsync($"{crew.Id}," +
+                        $"{crew.Pilot.First().FirstName}," +
+                        $"{crew.Pilot.First().LastName}," +
+                        $"{crew.Stewardess.Count}");
+                }
+            }
+            
         }
 
     }

@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using BSA2018_Hometask4.Shared.DTO;
 using FluentValidation;
 using BSA2018_Hometask4.Shared.Exceptions;
+using System.Net.Http;
+using BSA2018_Hometask7.Shared.DTO;
+using System.IO;
+using BSA2018_Hometask7.Shared.DTO.API;
 
 namespace BSA2018_Hometask4.Controllers
 {
@@ -118,6 +122,30 @@ namespace BSA2018_Hometask4.Controllers
             catch (Exception ex)
             {
                 return NotFound(ex);
+            }
+        }
+
+        //GET : v1/api/crew/load
+        [HttpGet("load")]
+        public async Task<IActionResult> Load()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    var x = await client.GetStringAsync("http://5b128555d50a5c0014ef1204.mockapi.io/crew");
+
+                    Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings();
+                    settings.DateFormatString = "YYYY-MM-DDTHH:mm:ss.FFFZ";
+                    settings.Formatting = Newtonsoft.Json.Formatting.Indented;
+                    var list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<APICrewDto>>(x, settings).Where(s=>s.Id<=10).ToList();
+                    await Task.WhenAll(service.WriteToCsv(list), service.WriteToDB(list));
+                }
+                catch(Exception e)
+                {
+                    return BadRequest(e);
+                }
+                return Ok();
             }
         }
     }

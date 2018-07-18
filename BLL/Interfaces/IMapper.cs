@@ -1,4 +1,5 @@
 ﻿using BSA2018_Hometask4.Shared.DTO;
+using BSA2018_Hometask7.Shared.DTO.API;
 using DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -32,5 +33,12 @@ namespace BSA2018_Hometask4.BLL.Interfaces
 
         TicketDto MapTicket(Ticket value);
         Task<Ticket> MapTicket(TicketDto value);
+
+
+        List<Crew> MapCrewApi(List<APICrewDto> ApiCrewDtos);
+        Pilot MapPilotApi(APIPilotDto pilot);
+        Stewadress MapStewadressApi(APIStewardessDto stewardess);
+        List<Stewadress> MapStewadressesApi(List<APIStewardessDto> stewardesses);
+       
     }
 }

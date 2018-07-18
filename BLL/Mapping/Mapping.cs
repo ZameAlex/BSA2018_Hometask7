@@ -7,6 +7,7 @@ using System.Linq;
 using DAL.UnitOfWork;
 using BSA2018_Hometask4.BLL.Interfaces;
 using System.Threading.Tasks;
+using BSA2018_Hometask7.Shared.DTO.API;
 
 namespace BSA2018_Hometask4.BLL.Mapping
 {
@@ -210,7 +211,54 @@ namespace BSA2018_Hometask4.BLL.Mapping
                 Speed = value.Speed
             };
         }
+        #region APIMapping
+        public List<Crew> MapCrewApi(List<APICrewDto> ApiCrewDtos)
+        {
+            var result = new List<Crew>();
+            foreach(var crew in ApiCrewDtos)
+            {
+                result.Add(new Crew()
+                {
+                    Pilot = MapPilotApi(crew.Pilot.First()),
+                    Stewadresses = MapStewadressesApi(crew.Stewardess)
+                }
+                );
+            }
+            return result;
+        }
 
-       
+        public Pilot MapPilotApi(APIPilotDto pilot)
+        {
+            return new Pilot
+            {
+                Birthday = pilot.BirthDate,
+                Experience = pilot.Exp,
+                Name = pilot.FirstName,
+                LastName = pilot.LastName
+            };
+        }
+
+        public Stewadress MapStewadressApi(APIStewardessDto stewardess)
+        {
+            return new Stewadress
+            {
+                Birthday = stewardess.BirthDate,
+                Name = stewardess.FirstName,
+                LastName = stewardess.LastName
+            };
+        }
+
+        public List<Stewadress> MapStewadressesApi(List<APIStewardessDto> stewardesses)
+        {
+            var result = new List<Stewadress>();
+            foreach (var stewadress in stewardesses)
+            {
+                result.Add(MapStewadressApi(stewadress));
+            }
+            return result;
+        }
+
+        #endregion
+
     }
 }
