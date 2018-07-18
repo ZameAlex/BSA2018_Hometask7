@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BSA2018_Hometask4.DAL.DbContext;
 using System;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : DAL.Models.Entity
 {
@@ -16,37 +18,37 @@ public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : DAL.
         DbContext = dbContext;
     }
 
-    public virtual int Create(TEntity entity)
+    public virtual async Task<int> Create(TEntity entity)
     {
         DbContext.SetOf<TEntity>().Add(entity);
-        DbContext.SaveChanges();
+        await DbContext.SaveChangesAsync();
         return entity.Id;
     }
 
-    public virtual void Delete(TEntity entity)
+    public virtual async Task Delete(TEntity entity)
     {
         DbContext.SetOf<TEntity>().Remove(entity);
-        DbContext.SaveChanges();
+        await DbContext.SaveChangesAsync();
     }
 
-    public virtual void Delete(int id)
+    public virtual async Task Delete(int id)
     {
-        DbContext.SetOf<TEntity>().Remove(DbContext.SetOf<TEntity>().SingleOrDefault(x=>x.Id==id));
-        DbContext.SaveChanges();
+        DbContext.SetOf<TEntity>().Remove( await DbContext.SetOf<TEntity>().FindAsync(id));
+        await DbContext.SaveChangesAsync();
     }
 
-    public virtual System.Collections.Generic.List<TEntity> Get()
+    public virtual async Task<List<TEntity>> Get()
     {
-       return DbContext.SetOf<TEntity>().ToList();
+        return  await DbContext.SetOf<TEntity>().ToListAsync();
     }
 
-    public virtual TEntity Get(int id)
+    public virtual async Task<TEntity> Get(int id)
     {
-        return DbContext.SetOf<TEntity>().Where(x => x.Id == id).FirstOrDefault();
+        return await DbContext.SetOf<TEntity>().FindAsync(id);
     }
 
-    public virtual void Update(TEntity entity, int id)
+    public virtual async Task Update(TEntity entity, int id)
     {
-        DbContext.SaveChanges();
+        await DbContext.SaveChangesAsync();
     }
 }

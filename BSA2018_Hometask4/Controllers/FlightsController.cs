@@ -23,11 +23,11 @@ namespace BSA2018_Hometask4.Controllers
         }
         // GET: v1/api/flights
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                return Ok(service.Get());
+                return Ok(await service.Get());
             }
             catch (Exception ex)
             {
@@ -37,11 +37,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // GET: v1/api/flights/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return Ok(service.Get(id));
+                return Ok(await service.Get(id));
             }
             catch (Exception ex)
             {
@@ -51,12 +51,12 @@ namespace BSA2018_Hometask4.Controllers
 
         // POST: v1/api/flights
         [HttpPost]
-        public IActionResult Post([FromBody]FlightDto value)
+        public async Task<IActionResult> Post([FromBody]FlightDto value)
         {
             try
             {
-                service.Create(value);
-                return Ok();
+                
+                return Ok(await service.Create(value));
             }
             catch (ValidationException e)
             {
@@ -70,11 +70,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // PUT: v1/api/flights/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] FlightDto flight)
+        public async Task<IActionResult> Put(int id, [FromBody] FlightDto flight)
         {
             try
             {
-                service.Update(flight, id);
+                await service.Update(flight, id);
                 return Ok("success");
             }
             catch (NotFoundException ex)
@@ -93,11 +93,11 @@ namespace BSA2018_Hometask4.Controllers
 
         //PATCH v1/api/flights/5
         [HttpPatch("{id}")]
-        public IActionResult Patch(int id, [FromBody](DateTime,DateTime) value)
+        public async Task<IActionResult> Patch(int id, [FromBody](DateTime,DateTime) value)
         {
             try
             {
-                service.Update(value.Item1, value.Item2, id);
+                await service.Update(value.Item1, value.Item2, id);
                 return Ok("success");
             }
             catch (NotFoundException ex)
@@ -116,11 +116,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // DELETE: v1/api/flights/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                service.Delete(id);
+                await service.Delete(id);
                 return NoContent();
             }
             catch (Exception ex)
@@ -131,11 +131,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // DELETE: v1/api/flights
         [HttpDelete]
-        public IActionResult Delete([FromBody] FlightDto flight)
+        public async Task<IActionResult> Delete([FromBody] FlightDto flight)
         {
             try
             {
-                service.Delete(flight);
+                await service.Delete(flight);
                 return NoContent();
             }
             catch (Exception ex)

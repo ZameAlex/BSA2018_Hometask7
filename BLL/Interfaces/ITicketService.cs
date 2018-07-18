@@ -2,18 +2,19 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Interfaces
 {
     public interface IPilotService
     {
-        PilotDto Get(int id);
-        List<PilotDto> Get();
-        int Create(PilotDto flight);
-        void Delete(int id);
-        void Delete(PilotDto flight);
-        void Update(PilotDto flight, int id);
-        void Update(int experience, int id);
+        Task<PilotDto>Get(int id);
+        Task<List<PilotDto>> Get();
+        Task<int> Create(PilotDto flight);
+        Task Delete(int id);
+        Task Delete(PilotDto flight);
+        Task Update(PilotDto flight, int id);
+        Task Update(int experience, int id);
 
     }
 }

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using BSA2018_Hometask4.Shared.Exceptions;
 using System.Text;
-
+using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Services
 {
@@ -24,42 +24,43 @@ namespace BSA2018_Hometask4.BLL.Services
             mapper = map;
             validator = rules;
         }
-        public int Create(DepartureDto departure)
+        public async Task<int> Create(DepartureDto departure)
         {
             var validationResult = validator.Validate(departure);
             if (validationResult.IsValid)
-                return unit.Departures.Create(mapper.MapDeparture(departure));
+                return await unit.Departures.Create(await mapper.MapDeparture(departure));
             else
                 throw new ValidationException(validationResult.Errors);
             
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            unit.Departures.Delete(id);
+            await unit.Departures.Delete(id);
         }
 
-        public void Delete(DepartureDto departure)
+        public async Task Delete(DepartureDto departure)
         {
-            unit.Departures.Delete(mapper.MapDeparture(departure));
+            await unit.Departures.Delete(await mapper.MapDeparture(departure));
         }
 
-        public DepartureDto Get(int id)
+        public async Task<DepartureDto> Get(int id)
         {
-            return mapper.MapDeparture(unit.Departures.Get(id));
+            return mapper.MapDeparture(await unit.Departures.Get(id));
         }
 
-        public List<DepartureDto> Get()
+        public async Task<List<DepartureDto>> Get()
         {
             var result = new List<DepartureDto>();
-            foreach (var item in unit.Departures.Get())
+            var list = await unit.Departures.Get();
+            foreach (var item in list)
             {
                 result.Add(mapper.MapDeparture(item));
             }
             return result;
         }
 
-        public void Update(DepartureDto departure, int id)
+        public async Task Update(DepartureDto departure, int id)
         {
             var validationResult = validator.Validate(departure);
             if (!validationResult.IsValid)
@@ -67,7 +68,7 @@ namespace BSA2018_Hometask4.BLL.Services
             try
             {
                 departure.ID = id;
-                unit.Departures.Update(mapper.MapDeparture(departure), id);
+                await unit.Departures.Update(await mapper.MapDeparture(departure), id);
             }
             catch (ArgumentNullException)
             {
@@ -79,14 +80,14 @@ namespace BSA2018_Hometask4.BLL.Services
             }
         }
 
-        public void Update(DateTime date, int id)
+        public async Task Update(DateTime date, int id)
         {
             var validationResult = validator.Validate(new DepartureDto() { Date = date }, "Date");
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
             try
             {
-                (unit.Departures as DepartureRepository).Update(date, id);
+                await (unit.Departures as DepartureRepository).Update(date, id);
             }
             catch (ArgumentNullException)
             {
@@ -98,5 +99,6 @@ namespace BSA2018_Hometask4.BLL.Services
             }
 
         }
+
     }
 }

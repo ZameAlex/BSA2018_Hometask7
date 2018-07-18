@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using BSA2018_Hometask4.DAL.DbContext;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DAL.Repository
 {
@@ -13,16 +14,16 @@ namespace DAL.Repository
         {
         }
 
-        public override void Update(PlaneType entity, int id)
+        public override async Task Update(PlaneType entity, int id)
         {
-            var temp = DbContext.SetOf<PlaneType>().SingleOrDefault(x => x.Id == id);
+            var temp = await DbContext.SetOf<PlaneType>().FindAsync(id);
             temp.MaxHeight = entity.MaxHeight;
             temp.MaxMass = entity.MaxMass;
             temp.Model = entity.Model;
             temp.Places = entity.Places;
             temp.Speed = entity.Speed;
             DbContext.Types.Update(temp);
-            base.Update(entity, id);
+            await base.Update(entity, id);
         }
     }
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DAL.Repository
 {
@@ -16,9 +17,9 @@ namespace DAL.Repository
         }
 
 
-        public override void Update(Flight entity, int id)
+        public override async Task Update(Flight entity, int id)
         {
-            var temp = DbContext.SetOf<Flight>().SingleOrDefault(x => x.Id == id);
+            var temp = await DbContext.SetOf<Flight>().FindAsync(id);
             temp.DeparturePoint = entity.DeparturePoint;
             temp.DepartureTime = entity.DepartureTime;
             temp.DestinationPoint = entity.DestinationPoint;
@@ -26,16 +27,16 @@ namespace DAL.Repository
             temp.Number = entity.Number;
             temp.Tickets = entity.Tickets;
             DbContext.Flights.Update(temp);
-            base.Update(entity, id);
+            await base.Update(entity, id);
         }
 
-        public void Update(DateTime departure, DateTime destination, int id)
+        public async Task Update(DateTime departure, DateTime destination, int id)
         {
-            var temp = Get(id);
+            var temp = await Get(id);
             temp.DepartureTime = departure;
             temp.DestinationTime = destination;
             DbContext.Update(temp);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
         }
     }
 }

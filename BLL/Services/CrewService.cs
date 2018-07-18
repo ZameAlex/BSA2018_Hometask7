@@ -9,6 +9,7 @@ using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Services
 {
@@ -24,43 +25,44 @@ namespace BSA2018_Hometask4.BLL.Services
             mapper = map;
             validator = rules;
         }
-        public int Create(CrewDto Crew)
+        public async Task<int> Create(CrewDto Crew)
         {
             var validationResult = validator.Validate(Crew);
             if (validationResult.IsValid)
             {
-                return unit.Crew.Create(mapper.MapCrew(Crew));
+                return await unit.Crew.Create(await mapper.MapCrew(Crew));
             }
             else
                 throw new ValidationException(validationResult.Errors);
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            unit.Crew.Delete(id);
+            await unit.Crew.Delete(id);
         }
 
-        public void Delete(CrewDto Crew)
+        public async Task Delete(CrewDto Crew)
         {
-            unit.Crew.Delete(mapper.MapCrew(Crew));
+            await unit.Crew.Delete(await mapper.MapCrew(Crew));
         }
 
-        public CrewDto Get(int id)
+        public async Task<CrewDto> Get(int id)
         {
-            return mapper.MapCrew(unit.Crew.Get(id));
+            return mapper.MapCrew(await unit.Crew.Get(id));
         }
 
-        public List<CrewDto> Get()
+        public async Task<List<CrewDto>> Get()
         {
             var result = new List<CrewDto>();
-            foreach(var item in unit.Crew.Get())
+            var list = await unit.Crew.Get();
+            foreach (var item in list)
             {
                 result.Add(mapper.MapCrew(item));
             }
             return result;
         }
 
-        public void Update(CrewDto Crew, int id)
+        public async Task Update(CrewDto Crew, int id)
         {
             var validationResult = validator.Validate(Crew);
             if (!validationResult.IsValid)
@@ -68,7 +70,7 @@ namespace BSA2018_Hometask4.BLL.Services
             try
             {
                 Crew.ID = id;
-                unit.Crew.Update(mapper.MapCrew(Crew), id);
+                await unit.Crew.Update(await mapper.MapCrew(Crew), id);
             }
             catch(ArgumentNullException)
             {

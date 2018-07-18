@@ -9,6 +9,7 @@ using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Services
 {
@@ -24,42 +25,42 @@ namespace BSA2018_Hometask4.BLL.Services
             mapper = map;
             validator = rules;
         }
-        public int Create(PlaneDto Plane)
+        public async Task<int> Create(PlaneDto Plane)
         {
             var validationResult = validator.Validate(Plane);
             if (validationResult.IsValid)
-                return unit.Planes.Create(mapper.MapPlane(Plane));
+                return await unit.Planes.Create(await mapper.MapPlane(Plane));
             else
                 throw new ValidationException(validationResult.Errors);
             
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            unit.Planes.Delete(id);
+            await unit.Planes.Delete(id);
         }
 
-        public void Delete(PlaneDto Plane)
+        public async Task Delete(PlaneDto Plane)
         {
-            unit.Planes.Delete(mapper.MapPlane(Plane));
+            await unit.Planes.Delete(await mapper.MapPlane(Plane));
         }
 
-        public PlaneDto Get(int id)
+        public async Task<PlaneDto> Get(int id)
         {
-            return mapper.MapPlane(unit.Planes.Get(id));
+            return mapper.MapPlane(await unit.Planes.Get(id));
         }
 
-        public List<PlaneDto> Get()
+        public async Task<List<PlaneDto>> Get()
         {
             var result = new List<PlaneDto>();
-            foreach (var item in unit.Planes.Get())
+            foreach (var item in await unit.Planes.Get())
             {
                 result.Add(mapper.MapPlane(item));
             }
             return result;
         }
 
-        public void Update(PlaneDto Plane, int id)
+        public async Task Update(PlaneDto Plane, int id)
         {
             var validationResult = validator.Validate(Plane);
             if (!validationResult.IsValid)
@@ -67,7 +68,7 @@ namespace BSA2018_Hometask4.BLL.Services
             try
             {
                 Plane.ID = id;
-                unit.Planes.Update(mapper.MapPlane(Plane), id);
+                await unit.Planes.Update(await mapper.MapPlane(Plane), id);
             }
             catch (ArgumentNullException)
             {
@@ -80,14 +81,14 @@ namespace BSA2018_Hometask4.BLL.Services
             
         }
 
-        public void Update(TimeSpan expires, int id)
+        public async Task Update(TimeSpan expires, int id)
         {
             var validationResult = validator.Validate(new PlaneDto() { Expires = expires }, "Expires");
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
             try
             {
-                (unit.Planes as PlaneRepository).Update(DateTime.Now.AddDays(expires.Days), id);
+                await (unit.Planes as PlaneRepository).Update(DateTime.Now.AddDays(expires.Days), id);
             }
             catch (ArgumentNullException)
             {

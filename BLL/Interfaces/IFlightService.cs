@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using BSA2018_Hometask4.Shared.DTO;
 
 namespace BSA2018_Hometask4.BLL.Interfaces
 {
     public interface IFlightService
     {
-        FlightDto Get(int id);
-        List<FlightDto> Get();
-        int Create(FlightDto flight);
-        void Delete(int id);
-        void Delete(FlightDto flight);
-        void Update(FlightDto flight, int id);
-        void Update(DateTime departureTime, DateTime destinationTime, int id);
+        Task<FlightDto> Get(int id);
+        Task<List<FlightDto>> Get();
+        Task<int> Create(FlightDto flight);
+        Task Delete(int id);
+        Task Delete(FlightDto flight);
+        Task Update(FlightDto flight, int id);
+        Task Update(DateTime departureTime, DateTime destinationTime, int id);
         
     }
 }

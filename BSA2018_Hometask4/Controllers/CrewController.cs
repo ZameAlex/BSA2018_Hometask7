@@ -23,11 +23,11 @@ namespace BSA2018_Hometask4.Controllers
         }
         // GET: v1/api/crew
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                return Ok(service.Get());
+                return Ok(await service.Get());
             }
             catch (Exception ex )
             {
@@ -37,11 +37,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // GET: v1/api/crew/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return Ok(service.Get(id));
+                return Ok(await service.Get(id));
             }
             catch (Exception ex)
             {
@@ -51,11 +51,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // POST: v1/api/crew
         [HttpPost]
-        public IActionResult Post([FromBody]CrewDto value)
+        public async Task<IActionResult> Post([FromBody]CrewDto value)
         {
             try
             {
-                service.Create(value);
+                await service.Create(value);
                 return Ok();
             }
             catch (ValidationException e)
@@ -70,11 +70,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // PUT: v1/api/crew/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] CrewDto crew)
+        public async Task<IActionResult> Put(int id, [FromBody] CrewDto crew)
         {
             try
             {
-                service.Update(crew, id);
+                await service.Update(crew, id);
                 return Ok();
             }
             catch(NotFoundException ex)
@@ -93,11 +93,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // DELETE: v1/api/crew/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                service.Delete(id);
+                await service.Delete(id);
                 return NoContent();
             }
             catch (Exception ex)
@@ -108,11 +108,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // DELETE: v1/api/crew
         [HttpDelete]
-        public IActionResult Delete([FromBody] CrewDto crew)
+        public async Task<IActionResult> Delete([FromBody] CrewDto crew)
         {
             try
             {
-                service.Delete(crew);
+                await service.Delete(crew);
                 return NoContent();
             }
             catch (Exception ex)

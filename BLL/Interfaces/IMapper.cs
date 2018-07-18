@@ -3,13 +3,14 @@ using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Interfaces
 {
     public interface IMapper
     {
         CrewDto MapCrew(Crew value);
-        Crew MapCrew(CrewDto value);
+        Task<Crew> MapCrew(CrewDto value);
 
         PilotDto MapPilot(Pilot value);
         Pilot MapPilot(PilotDto value);
@@ -18,18 +19,18 @@ namespace BSA2018_Hometask4.BLL.Interfaces
         Stewadress MapStewadress(StewadressDto value);
 
         PlaneDto MapPlane(Plane value);
-        Plane MapPlane(PlaneDto value);
+        Task<Plane> MapPlane(PlaneDto value);
 
         TypeDto MapType(PlaneType value);
         PlaneType MapType(TypeDto value);
 
         FlightDto MapFlight(Flight value);
-        Flight MapFlight(FlightDto value);
+        Task<Flight> MapFlight(FlightDto value);
 
         DepartureDto MapDeparture(Departure value);
-        Departure MapDeparture(DepartureDto value);
+        Task<Departure> MapDeparture(DepartureDto value);
 
         TicketDto MapTicket(Ticket value);
-        Ticket MapTicket(TicketDto value);
+        Task<Ticket> MapTicket(TicketDto value);
     }
 }

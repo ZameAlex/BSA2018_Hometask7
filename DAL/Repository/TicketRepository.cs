@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 
 namespace DAL.Repository
 {
@@ -15,13 +15,13 @@ namespace DAL.Repository
 
         }
 
-        public override void Update(Ticket entity, int id)
+        public override async Task Update(Ticket entity, int id)
         {
-            var temp = DbContext.SetOf<Ticket>().SingleOrDefault(x => x.Id == id);
+            var temp = await DbContext.SetOf<Ticket>().FindAsync(id);
             temp.Flight = entity.Flight;
             temp.Price = entity.Price;
             DbContext.Tickets.Update(temp);
-            base.Update(entity, id);
+            await base.Update(entity, id);
         }
     }
 }

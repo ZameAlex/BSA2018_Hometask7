@@ -113,9 +113,9 @@ namespace DAL.UnitOfWork
             throw new NotImplementedException();
         }
 
-        public Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            return await db.SaveChangesAsync();
         }
     }
 }

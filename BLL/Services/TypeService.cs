@@ -8,6 +8,7 @@ using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Services
 {
@@ -23,41 +24,41 @@ namespace BSA2018_Hometask4.BLL.Services
             mapper = map;
             validator = rules;
         }
-        public int Create(TypeDto Type)
+        public async Task<int> Create(TypeDto Type)
         {
             var validationResult = validator.Validate(Type);
             if (validationResult.IsValid)
-                return unit.Types.Create(mapper.MapType(Type));
+                return await unit.Types.Create(mapper.MapType(Type));
             else
                 throw new ValidationException(validationResult.Errors);
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            unit.Types.Delete(id);
+            await unit.Types.Delete(id);
         }
 
-        public void Delete(TypeDto Type)
+        public async Task Delete(TypeDto Type)
         {
-            unit.Types.Delete(mapper.MapType(Type));
+            await unit.Types.Delete(mapper.MapType(Type));
         }
 
-        public TypeDto Get(int id)
+        public async Task<TypeDto> Get(int id)
         {
-            return mapper.MapType(unit.Types.Get(id));
+            return mapper.MapType(await unit.Types.Get(id));
         }
 
-        public List<TypeDto> Get()
+        public async Task<List<TypeDto>> Get()
         {
             var result = new List<TypeDto>();
-            foreach (var item in unit.Types.Get())
+            foreach (var item in await unit.Types.Get())
             {
                 result.Add(mapper.MapType(item));
             }
             return result;
         }
 
-        public void Update(TypeDto Type, int id)
+        public async Task Update(TypeDto Type, int id)
         {
             var validationResult = validator.Validate(Type);
             if (!validationResult.IsValid)
@@ -65,7 +66,7 @@ namespace BSA2018_Hometask4.BLL.Services
             try
             {
                 Type.ID = id;
-                unit.Types.Update(mapper.MapType(Type), id);
+                await unit.Types.Update(mapper.MapType(Type), id);
             }
             catch (ArgumentNullException)
             {

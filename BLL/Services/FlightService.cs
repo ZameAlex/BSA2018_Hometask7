@@ -8,6 +8,7 @@ using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Services
 {
@@ -23,41 +24,42 @@ namespace BSA2018_Hometask4.BLL.Services
             mapper = map;
             validator = rules;
         }
-        public int Create(FlightDto flight)
+        public async Task<int> Create(FlightDto flight)
         {
             var validationResult = validator.Validate(flight);
             if (validationResult.IsValid)
-                return unit.Flights.Create(mapper.MapFlight(flight));
+                return await unit.Flights.Create(await mapper.MapFlight(flight));
             else
                 throw new ValidationException(validationResult.Errors);
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            unit.Flights.Delete(id);
+            await unit.Flights.Delete(id);
         }
 
-        public void Delete(FlightDto flight)
+        public async Task Delete(FlightDto flight)
         {
-            unit.Flights.Delete(mapper.MapFlight(flight));
+            await unit.Flights.Delete(await mapper.MapFlight(flight));
         }
 
-        public FlightDto Get(int id)
+        public async Task<FlightDto> Get(int id)
         {
-            return mapper.MapFlight(unit.Flights.Get(id));
+            return mapper.MapFlight(await unit.Flights.Get(id));
         }
 
-        public List<FlightDto> Get()
+        public async Task<List<FlightDto>> Get()
         {
             var result = new List<FlightDto>();
-            foreach (var item in unit.Flights.Get())
+            var list = await unit.Flights.Get();
+            foreach (var item in list)
             {
                 result.Add(mapper.MapFlight(item));
             }
             return result;
         }
 
-        public void Update(FlightDto flight, int id)
+        public async Task Update(FlightDto flight, int id)
         {
             var validationResult = validator.Validate(flight);
             if (!validationResult.IsValid)
@@ -65,7 +67,7 @@ namespace BSA2018_Hometask4.BLL.Services
             try
             {
                 flight.ID = id;
-                unit.Flights.Update(mapper.MapFlight(flight), id);
+                await unit.Flights.Update(await mapper.MapFlight(flight), id);
             }
             catch (ArgumentNullException)
             {
@@ -78,7 +80,7 @@ namespace BSA2018_Hometask4.BLL.Services
             
         }
 
-        public void Update(DateTime departureTime, DateTime destinationTime, int id)
+        public async Task Update(DateTime departureTime, DateTime destinationTime, int id)
         {
             var validationResult = validator.Validate(new FlightDto()
             {
@@ -91,7 +93,7 @@ namespace BSA2018_Hometask4.BLL.Services
                 throw new ValidationException(validationResult.Errors);
             try
             {
-                (unit.Flights as FlightRepository).Update(departureTime, destinationTime, id);
+                await  (unit.Flights as FlightRepository).Update(departureTime, destinationTime, id);
             }
             catch (ArgumentNullException)
             {

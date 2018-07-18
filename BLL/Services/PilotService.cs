@@ -8,6 +8,7 @@ using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Services
 {
@@ -23,42 +24,42 @@ namespace BSA2018_Hometask4.BLL.Services
             mapper = map;
             validator = rules;
         }
-        public int Create(PilotDto Pilot)
+        public async Task<int> Create(PilotDto Pilot)
         {
             var validationResult = validator.Validate(Pilot);
             if (validationResult.IsValid)
-                return unit.Pilots.Create(mapper.MapPilot(Pilot));
+                return await unit.Pilots.Create(mapper.MapPilot(Pilot));
             else
                 throw new ValidationException(validationResult.Errors);
             
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            unit.Pilots.Delete(id);
+            await unit.Pilots.Delete(id);
         }
 
-        public void Delete(PilotDto Pilot)
+        public async Task Delete(PilotDto Pilot)
         {
-            unit.Pilots.Delete(mapper.MapPilot(Pilot));
+            await unit.Pilots.Delete(mapper.MapPilot(Pilot));
         }
 
-        public PilotDto Get(int id)
+        public async Task<PilotDto> Get(int id)
         {
-            return mapper.MapPilot(unit.Pilots.Get(id));
+            return mapper.MapPilot(await unit.Pilots.Get(id));
         }
 
-        public List<PilotDto> Get()
+        public async Task<List<PilotDto>> Get()
         {
             var result = new List<PilotDto>();
-            foreach (var item in unit.Pilots.Get())
+            foreach (var item in await unit.Pilots.Get())
             {
                 result.Add(mapper.MapPilot(item));
             }
             return result;
         }
 
-        public void Update(PilotDto Pilot, int id)
+        public async Task Update(PilotDto Pilot, int id)
         {
             var validationResult = validator.Validate(Pilot);
             if (!validationResult.IsValid)
@@ -66,7 +67,7 @@ namespace BSA2018_Hometask4.BLL.Services
             try
             {
                 Pilot.ID = id;
-                unit.Pilots.Update(mapper.MapPilot(Pilot), id);
+                await unit.Pilots.Update(mapper.MapPilot(Pilot), id);
             }
             catch (ArgumentNullException)
             {
@@ -79,14 +80,14 @@ namespace BSA2018_Hometask4.BLL.Services
             
         }
 
-        public void Update(int experience, int id)
+        public async Task Update(int experience, int id)
         {
             var validationResult = validator.Validate(new PilotDto() { Experience = experience }, "Experience");
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
             try
             {
-                (unit.Pilots as PilotRepository).Update(experience, id);
+                await  (unit.Pilots as PilotRepository).Update(experience, id);
             }
             catch (ArgumentNullException)
             {
@@ -98,5 +99,6 @@ namespace BSA2018_Hometask4.BLL.Services
             }
 
         }
+
     }
 }

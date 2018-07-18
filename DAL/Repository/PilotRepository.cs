@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using BSA2018_Hometask4.DAL.DbContext;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DAL.Repository
 {
@@ -15,21 +16,22 @@ namespace DAL.Repository
         }
 
 
-        public override void Update(Pilot entity, int id)
+        public override async Task Update(Pilot entity, int id)
         {
-            var temp = DbContext.SetOf<Pilot>().SingleOrDefault(x => x.Id == id);
+            var temp = await DbContext.SetOf<Pilot>().FindAsync(id);
             temp.Birthday = entity.Birthday;
             temp.Experience = entity.Experience;
             temp.LastName = entity.LastName;
             temp.Name = entity.Name;
             DbContext.Pilots.Update(temp);
-            base.Update(entity, id);
+            await base.Update(entity, id);
         }
 
-        public void Update(int experience,int id)
+        public async Task Update(int experience,int id)
         {
-            Get(id).Experience = experience;
-            DbContext.SaveChanges();
+            var temp = await Get(id);
+            temp.Experience = experience;
+            await DbContext.SaveChangesAsync();
         }
     }
 }

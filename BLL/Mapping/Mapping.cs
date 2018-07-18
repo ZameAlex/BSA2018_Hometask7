@@ -6,6 +6,7 @@ using BSA2018_Hometask4.Shared.DTO;
 using System.Linq;
 using DAL.UnitOfWork;
 using BSA2018_Hometask4.BLL.Interfaces;
+using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Mapping
 {
@@ -30,8 +31,9 @@ namespace BSA2018_Hometask4.BLL.Mapping
             };
         }
 
-        public Flight MapFlight(FlightDto value)
+        public async Task<Flight> MapFlight(FlightDto value)
         {
+            var list = await unitOfWork.Tickets.Get();
             return new Flight()
             {
                 Id=value.ID,
@@ -40,7 +42,7 @@ namespace BSA2018_Hometask4.BLL.Mapping
                 DestinationPoint=value.Destination,
                 DestinationTime=value.DestinationTime,
                 Number=value.Number,
-                Tickets=unitOfWork.Tickets.Get().Where(t=>value.Tickets.Contains(t.Id)).ToList()
+                Tickets= list.Where(t=>value.Tickets.Contains(t.Id)).ToList()
             };
         }
 
@@ -54,12 +56,13 @@ namespace BSA2018_Hometask4.BLL.Mapping
             };
         }
 
-        public Ticket MapTicket(TicketDto value)
+        public async Task<Ticket> MapTicket(TicketDto value)
         {
+            var list = await unitOfWork.Flights.Get();
             return new Ticket
             {
                 Id=value.ID,
-                Flight=unitOfWork.Flights.Get().SingleOrDefault(x=>x.Number==value.Number),
+                Flight=list.SingleOrDefault(x=>x.Number==value.Number),
                 Price=value.Price
             };
         }
@@ -76,15 +79,16 @@ namespace BSA2018_Hometask4.BLL.Mapping
             };
         }
 
-        public Departure MapDeparture(DepartureDto value)
+        public async Task<Departure> MapDeparture(DepartureDto value)
         {
+            var list = await unitOfWork.Flights.Get();
             return new Departure
             {
                Id=value.ID,
                Date=value.Date,
-               Crew=unitOfWork.Crew.Get(value.CrewId),
-               Flight=unitOfWork.Flights.Get().SingleOrDefault(x=>x.Number==value.Number),
-               Plane=unitOfWork.Planes.Get(value.PlaneId)
+               Crew=await unitOfWork.Crew.Get(value.CrewId),
+               Flight= list.SingleOrDefault(x=>x.Number==value.Number),
+               Plane=await unitOfWork.Planes.Get(value.PlaneId)
             };
         }
 
@@ -144,13 +148,14 @@ namespace BSA2018_Hometask4.BLL.Mapping
             };
         }
 
-        public Crew MapCrew(CrewDto value)
+        public async Task<Crew> MapCrew(CrewDto value)
         {
+            var list = await unitOfWork.Stewadresses.Get();
             return new Crew
             {
                 Id = value.ID,
-                Pilot=unitOfWork.Pilots.Get(value.Pilot),
-                Stewadresses = unitOfWork.Stewadresses.Get().Where(s=>value.Stewadress.Contains(s.Id)).ToList()
+                Pilot= await unitOfWork.Pilots.Get(value.Pilot),
+                Stewadresses = list.Where(s=>value.Stewadress.Contains(s.Id)).ToList()
             };
         }
 
@@ -166,13 +171,13 @@ namespace BSA2018_Hometask4.BLL.Mapping
             };
         }
 
-        public Plane MapPlane(PlaneDto value)
+        public async Task<Plane> MapPlane(PlaneDto value)
         {
             return new Plane
             {
                 Id = value.ID,
                 Name = value.Name,
-                Type = unitOfWork.Types.Get(value.Type),
+                Type = await unitOfWork.Types.Get(value.Type),
                 Created = value.Created,
                 Expired = DateTime.Now.AddDays(value.Expires.Days)
             };
