@@ -86,7 +86,7 @@ namespace BSA2018_Hometask4.BLL.Mapping
                 ID = value.Id,
                 Date = value.Date,
                 Crew = MapCrew(value.Crew),
-                Number = value.Flight.Number,
+                Flight = MapFlight(value.Flight),
                 Plane = MapPlane(value.Plane)
             };
         }
@@ -99,7 +99,7 @@ namespace BSA2018_Hometask4.BLL.Mapping
                 Id = value.ID,
                 Date = value.Date,
                 Crew = await unitOfWork.Crew.Get(value.Crew.ID),
-                Flight = list.SingleOrDefault(x => x.Number == value.Number),
+                Flight = list.SingleOrDefault(x => x.Number == value.Flight.Number),
                 Plane = await unitOfWork.Planes.Get(value.Plane.ID)
             };
         }
