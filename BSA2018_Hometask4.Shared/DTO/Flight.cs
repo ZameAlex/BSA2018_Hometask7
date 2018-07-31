@@ -12,6 +12,6 @@ namespace BSA2018_Hometask4.Shared.DTO
         public DateTime DepartureTime { get; set; }
         public string Destination { get; set; }
         public DateTime DestinationTime { get; set; }
-        public List<int> Tickets { get; set; }
+        public List<TicketDto> Tickets { get; set; }
     }
 }

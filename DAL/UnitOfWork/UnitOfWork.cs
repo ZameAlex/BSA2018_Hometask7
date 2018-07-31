@@ -56,7 +56,7 @@ namespace DAL.UnitOfWork
                 return departureRepository;
             }
         }
-        public IRepository<Stewadress> Stewadresses
+        public IRepository<Stewardess> Stewadresses
         {
             get
             {

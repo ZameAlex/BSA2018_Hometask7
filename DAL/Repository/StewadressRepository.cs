@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace DAL.Repository
 {
-    public class StewadressRepository : BaseRepository<Stewadress>
+    public class StewadressRepository : BaseRepository<Stewardess>
     {
         public StewadressRepository(AirportContext db):base(db)
         {
 
         }
 
-        public override async Task Update(Stewadress entity, int id)
+        public override async Task Update(Stewardess entity, int id)
         {
-            var temp = await DbContext.SetOf<Stewadress>().FindAsync(id);
+            var temp = await DbContext.SetOf<Stewardess>().FindAsync(id);
             temp.Birthday = entity.Birthday;
             temp.LastName = entity.LastName;
             temp.Name = entity.Name;
-            DbContext.Stewadresses.Update(temp);
+            DbContext.Stewardesses.Update(temp);
             await base.Update(entity, id);
         }
     }

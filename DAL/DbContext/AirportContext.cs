@@ -27,7 +27,7 @@ namespace BSA2018_Hometask4.DAL.DbContext
         public DbSet<Crew> Crew { get; set; }
         public DbSet<Departure> Depatures { get; set; }
         public DbSet<Pilot> Pilots { get; set; }
-        public DbSet<Stewadress> Stewadresses { get; set; }
+        public DbSet<Stewardess> Stewardesses { get; set; }
         public DbSet<Plane> Planes { get; set; }
         public DbSet<PlaneType> Types { get; set; }
 
@@ -40,19 +40,23 @@ namespace BSA2018_Hometask4.DAL.DbContext
             }
             else if (Depatures is IEnumerable<TEntity>)
             {
+                Tickets.Load();
                 Flights.Load();
+                Pilots.Load();
+                Stewardesses.Load();
                 Crew.Load();
+                Types.Load();
                 Planes.Load();
                 return Depatures as DbSet<TEntity>;
             }
             else if (Crew is IEnumerable<TEntity>)
             {
                 Pilots.Load();
-                Stewadresses.Load();
+                Stewardesses.Load();
                 return Crew as DbSet<TEntity>;
             }
-            else if (Stewadresses is IEnumerable<TEntity>)
-                return Stewadresses as DbSet<TEntity>;
+            else if (Stewardesses is IEnumerable<TEntity>)
+                return Stewardesses as DbSet<TEntity>;
             else if (Pilots is IEnumerable<TEntity>)
                 return Pilots as DbSet<TEntity>;
             else if (Planes is IEnumerable<TEntity>)

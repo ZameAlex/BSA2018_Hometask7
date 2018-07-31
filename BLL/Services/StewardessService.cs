@@ -12,19 +12,19 @@ using System.Threading.Tasks;
 
 namespace BSA2018_Hometask4.BLL.Services
 {
-    public class StewadressService : IStewadressService
+    public class StewardessService : IStewadressService
     {
         readonly IUnitOfWork unit;
         readonly IMapper mapper;
-        readonly AbstractValidator<StewadressDto> validator;
+        readonly AbstractValidator<StewardessDto> validator;
 
-        public StewadressService(IUnitOfWork uow, IMapper map, AbstractValidator<StewadressDto> rules)
+        public StewardessService(IUnitOfWork uow, IMapper map, AbstractValidator<StewardessDto> rules)
         {
             unit = uow;
             mapper = map;
             validator = rules;
         }
-        public async Task<int> Create(StewadressDto Stewadress)
+        public async Task<int> Create(StewardessDto Stewadress)
         {
             var validationResult = validator.Validate(Stewadress);
             if (validationResult.IsValid)
@@ -39,19 +39,19 @@ namespace BSA2018_Hometask4.BLL.Services
             await unit.Stewadresses.Delete(id);
         }
 
-        public async Task Delete(StewadressDto Stewadress)
+        public async Task Delete(StewardessDto Stewadress)
         {
             await unit.Stewadresses.Delete(mapper.MapStewadress(Stewadress));
         }
 
-        public async Task<StewadressDto> Get(int id)
+        public async Task<StewardessDto> Get(int id)
         {
             return mapper.MapStewadress(await unit.Stewadresses.Get(id));
         }
 
-        public async Task<List<StewadressDto>> Get()
+        public async Task<List<StewardessDto>> Get()
         {
-            var result = new List<StewadressDto>();
+            var result = new List<StewardessDto>();
             foreach (var item in await unit.Stewadresses.Get())
             {
                 result.Add(mapper.MapStewadress(item));
@@ -59,7 +59,7 @@ namespace BSA2018_Hometask4.BLL.Services
             return result;
         }
 
-        public async Task Update(StewadressDto Stewadress, int id)
+        public async Task Update(StewardessDto Stewadress, int id)
         {
             var validationResult = validator.Validate(Stewadress);
             if (!validationResult.IsValid)

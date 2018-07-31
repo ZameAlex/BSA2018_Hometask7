@@ -7,7 +7,7 @@ namespace BSA2018_Hometask4.Shared.DTO
     public class CrewDto
     {
         public int ID { get; set; }
-        public int Pilot { get; set; }
-        public List<int> Stewadress { get; set; }
+        public PilotDto Pilot { get; set; }
+        public List<StewardessDto> Stewardess { get; set; }
     }
 }

@@ -74,11 +74,11 @@ namespace BSA2018_Hometask4.Controllers
 
         // PUT: v1/api/crew/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] CrewDto crew)
+        public IActionResult Put(int id, [FromBody] CrewDto crew)
         {
             try
             {
-                await service.Update(crew, id);
+                service.Update(crew, id);
                 return Ok();
             }
             catch(NotFoundException ex)
@@ -135,9 +135,11 @@ namespace BSA2018_Hometask4.Controllers
                 {
                     var x = await client.GetStringAsync("http://5b128555d50a5c0014ef1204.mockapi.io/crew");
 
-                    Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings();
-                    settings.DateFormatString = "YYYY-MM-DDTHH:mm:ss.FFFZ";
-                    settings.Formatting = Newtonsoft.Json.Formatting.Indented;
+                    Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings
+                    {
+                        DateFormatString = "YYYY-MM-DDTHH:mm:ss.FFFZ",
+                        Formatting = Newtonsoft.Json.Formatting.Indented
+                    };
                     var list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<APICrewDto>>(x, settings).Where(s=>s.Id<=10).ToList();
                     await Task.WhenAll(service.WriteToCsv(list), service.WriteToDB(list));
                 }

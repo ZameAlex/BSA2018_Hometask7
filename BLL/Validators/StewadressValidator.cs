@@ -6,7 +6,7 @@ using BSA2018_Hometask4.Shared.DTO;
 
 namespace BSA2018_Hometask4.BLL.Validators
 {
-    public class StewadressValidator:AbstractValidator<StewadressDto>
+    public class StewadressValidator:AbstractValidator<StewardessDto>
     {
         public StewadressValidator()
         {

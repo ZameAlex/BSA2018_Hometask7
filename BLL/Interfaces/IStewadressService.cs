@@ -8,12 +8,12 @@ namespace BSA2018_Hometask4.BLL.Interfaces
 {
     public interface IStewadressService
     {
-        Task<StewadressDto> Get(int id);
-        Task<List<StewadressDto>> Get();
-        Task<int> Create(StewadressDto flight);
+        Task<StewardessDto> Get(int id);
+        Task<List<StewardessDto>> Get();
+        Task<int> Create(StewardessDto flight);
         Task Delete(int id);
-        Task Delete(StewadressDto flight);
-        Task Update(StewadressDto flight, int id);
+        Task Delete(StewardessDto flight);
+        Task Update(StewardessDto flight, int id);
         
     }
 }

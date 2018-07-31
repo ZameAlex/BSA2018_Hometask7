@@ -11,7 +11,7 @@ using BSA2018_Hometask7.Shared.DTO.API;
 
 namespace BSA2018_Hometask4.BLL.Mapping
 {
-    public class Mapping:IMapper
+    public class Mapping : IMapper
     {
         readonly IUnitOfWork unitOfWork;
         public Mapping(IUnitOfWork uow)
@@ -20,6 +20,9 @@ namespace BSA2018_Hometask4.BLL.Mapping
         }
         public FlightDto MapFlight(Flight value)
         {
+            var list = new List<TicketDto>();
+            foreach (var item in value.Tickets)
+                list.Add(MapTicket(item));
             return new FlightDto()
             {
                 ID = value.Id,
@@ -28,22 +31,30 @@ namespace BSA2018_Hometask4.BLL.Mapping
                 DepartureTime = value.DepartureTime,
                 Destination = value.DestinationPoint,
                 DestinationTime = value.DestinationTime,
-                Tickets = value.Tickets.Select(u => u.Id).ToList()
+                Tickets = list
             };
         }
 
         public async Task<Flight> MapFlight(FlightDto value)
         {
             var list = await unitOfWork.Tickets.Get();
+            var res = new List<Ticket>();
+            foreach (var item in value.Tickets)
+            {
+                foreach (var tick in list)
+                    if (item.ID == tick.Id)
+                        res.Add(tick);
+            }
             return new Flight()
             {
-                Id=value.ID,
-                DeparturePoint=value.DeparturePoint,
-                DepartureTime=value.DepartureTime,
-                DestinationPoint=value.Destination,
-                DestinationTime=value.DestinationTime,
-                Number=value.Number,
-                Tickets= list.Where(t=>value.Tickets.Contains(t.Id)).ToList()
+                Id = value.ID,
+                DeparturePoint = value.DeparturePoint,
+                DepartureTime = value.DepartureTime,
+                DestinationPoint = value.Destination,
+                DestinationTime = value.DestinationTime,
+                Number = value.Number,
+                Tickets = res
+
             };
         }
 
@@ -62,9 +73,9 @@ namespace BSA2018_Hometask4.BLL.Mapping
             var list = await unitOfWork.Flights.Get();
             return new Ticket
             {
-                Id=value.ID,
-                Flight=list.SingleOrDefault(x=>x.Number==value.Number),
-                Price=value.Price
+                Id = value.ID,
+                Flight = list.SingleOrDefault(x => x.Number == value.Number),
+                Price = value.Price
             };
         }
 
@@ -74,9 +85,9 @@ namespace BSA2018_Hometask4.BLL.Mapping
             {
                 ID = value.Id,
                 Date = value.Date,
-                CrewId = value.Crew.Id,
+                Crew = MapCrew(value.Crew),
                 Number = value.Flight.Number,
-                PlaneId = value.Plane.Id
+                Plane = MapPlane(value.Plane)
             };
         }
 
@@ -85,17 +96,17 @@ namespace BSA2018_Hometask4.BLL.Mapping
             var list = await unitOfWork.Flights.Get();
             return new Departure
             {
-               Id=value.ID,
-               Date=value.Date,
-               Crew=await unitOfWork.Crew.Get(value.CrewId),
-               Flight= list.SingleOrDefault(x=>x.Number==value.Number),
-               Plane=await unitOfWork.Planes.Get(value.PlaneId)
+                Id = value.ID,
+                Date = value.Date,
+                Crew = await unitOfWork.Crew.Get(value.Crew.ID),
+                Flight = list.SingleOrDefault(x => x.Number == value.Number),
+                Plane = await unitOfWork.Planes.Get(value.Plane.ID)
             };
         }
 
-        public StewadressDto MapStewadress(Stewadress value)
+        public StewardessDto MapStewadress(Stewardess value)
         {
-            return new StewadressDto
+            return new StewardessDto
             {
                 ID = value.Id,
                 FirstName = value.Name,
@@ -104,9 +115,9 @@ namespace BSA2018_Hometask4.BLL.Mapping
             };
         }
 
-        public Stewadress MapStewadress(StewadressDto value)
+        public Stewardess MapStewadress(StewardessDto value)
         {
-            return new Stewadress
+            return new Stewardess
             {
                 Id = value.ID,
                 Name = value.FirstName,
@@ -144,19 +155,42 @@ namespace BSA2018_Hometask4.BLL.Mapping
             return new CrewDto
             {
                 ID = value.Id,
-                Pilot = value.Pilot.Id,
-                Stewadress = value.Stewadresses.Select(x => x.Id).ToList()
+                Pilot = MapPilot(value.Pilot),
+                Stewardess = MapStewadresses(value.Stewadresses)
             };
+        }
+
+        private List<StewardessDto> MapStewadresses(List<Stewardess> stewadresses)
+        {
+            var result = new List<StewardessDto>();
+            foreach (var s in stewadresses)
+                result.Add(MapStewadress(s));
+            return result;
+        }
+
+        private List<Stewardess> MapStewadresses(List<StewardessDto> stewadresses)
+        {
+            var result = new List<Stewardess>();
+            foreach (var s in stewadresses)
+                result.Add(MapStewadress(s));
+            return result;
         }
 
         public async Task<Crew> MapCrew(CrewDto value)
         {
             var list = await unitOfWork.Stewadresses.Get();
+            var res = new List<Stewardess>();
+            foreach (var item in value.Stewardess)
+            {
+                foreach (var stew in list)
+                    if (item.ID == stew.Id)
+                        res.Add(stew);
+            }
             return new Crew
             {
                 Id = value.ID,
-                Pilot= await unitOfWork.Pilots.Get(value.Pilot),
-                Stewadresses = list.Where(s=>value.Stewadress.Contains(s.Id)).ToList()
+                Pilot = await unitOfWork.Pilots.Get(value.Pilot.ID),
+                Stewadresses = res
             };
         }
 
@@ -166,7 +200,7 @@ namespace BSA2018_Hometask4.BLL.Mapping
             {
                 ID = value.Id,
                 Name = value.Name,
-                Type = value.Type.Id,
+                Type = MapType(value.Type),
                 Created = value.Created,
                 Expires = DateTime.Now - value.Expired
             };
@@ -178,7 +212,7 @@ namespace BSA2018_Hometask4.BLL.Mapping
             {
                 Id = value.ID,
                 Name = value.Name,
-                Type = await unitOfWork.Types.Get(value.Type),
+                Type = MapType(value.Type),
                 Created = value.Created,
                 Expired = DateTime.Now.AddDays(value.Expires.Days)
             };
@@ -215,7 +249,7 @@ namespace BSA2018_Hometask4.BLL.Mapping
         public List<Crew> MapCrewApi(List<APICrewDto> ApiCrewDtos)
         {
             var result = new List<Crew>();
-            foreach(var crew in ApiCrewDtos)
+            foreach (var crew in ApiCrewDtos)
             {
                 result.Add(new Crew()
                 {
@@ -238,9 +272,9 @@ namespace BSA2018_Hometask4.BLL.Mapping
             };
         }
 
-        public Stewadress MapStewadressApi(APIStewardessDto stewardess)
+        public Stewardess MapStewadressApi(APIStewardessDto stewardess)
         {
-            return new Stewadress
+            return new Stewardess
             {
                 Birthday = stewardess.BirthDate,
                 Name = stewardess.FirstName,
@@ -248,9 +282,9 @@ namespace BSA2018_Hometask4.BLL.Mapping
             };
         }
 
-        public List<Stewadress> MapStewadressesApi(List<APIStewardessDto> stewardesses)
+        public List<Stewardess> MapStewadressesApi(List<APIStewardessDto> stewardesses)
         {
-            var result = new List<Stewadress>();
+            var result = new List<Stewardess>();
             foreach (var stewadress in stewardesses)
             {
                 result.Add(MapStewadressApi(stewadress));

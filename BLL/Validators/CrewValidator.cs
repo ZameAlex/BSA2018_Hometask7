@@ -11,9 +11,9 @@ namespace BSA2018_Hometask4.BLL.Validators
         public CrewValidator()
         {
             RuleFor(f => f.ID).Empty();
-            RuleFor(c => c.Pilot).NotNull().GreaterThan(0);
-            RuleFor(c => c.Stewadress).NotNull();
-            RuleForEach(c => c.Stewadress).NotNull().GreaterThan(0);
+            RuleFor(c => c.Pilot).NotNull();
+            RuleFor(c => c.Stewardess).NotNull();
+            RuleForEach(c => c.Stewardess).NotNull();
         }
     }
 }

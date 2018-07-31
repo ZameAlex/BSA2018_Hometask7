@@ -11,13 +11,13 @@ using BSA2018_Hometask4.Shared.Exceptions;
 
 namespace BSA2018_Hometask4.Controllers
 {
-    [Route("v1/api/stewadress")]
+    [Route("v1/api/stewardess")]
     [ApiController]
-    public class StewadresssController : ControllerBase
+    public class StewardessesController : ControllerBase
     {
         readonly IStewadressService service;
 
-        public StewadresssController(IStewadressService stewadressService)
+        public StewardessesController(IStewadressService stewadressService)
         {
             service = stewadressService;
         }
@@ -51,7 +51,7 @@ namespace BSA2018_Hometask4.Controllers
 
         // POST: v1/api/stewadress
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]StewadressDto value)
+        public async Task<IActionResult> Post([FromBody]StewardessDto value)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace BSA2018_Hometask4.Controllers
 
         // PUT: v1/api/stewadress/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] StewadressDto stewadress)
+        public async Task<IActionResult> Put(int id, [FromBody] StewardessDto stewadress)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace BSA2018_Hometask4.Controllers
 
         // DELETE: v1/api/stewadress
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] StewadressDto stewadress)
+        public async Task<IActionResult> Delete([FromBody] StewardessDto stewadress)
         {
             try
             {

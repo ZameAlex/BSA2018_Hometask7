@@ -8,7 +8,7 @@ namespace BSA2018_Hometask4.Shared.DTO
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public int Type { get; set; }
+        public TypeDto Type { get; set; }
         public DateTime Created { get; set; }
         public TimeSpan Expires { get; set; }
     }

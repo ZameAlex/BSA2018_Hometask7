@@ -16,8 +16,8 @@ namespace BSA2018_Hometask4.BLL.Interfaces
         PilotDto MapPilot(Pilot value);
         Pilot MapPilot(PilotDto value);
 
-        StewadressDto MapStewadress(Stewadress value);
-        Stewadress MapStewadress(StewadressDto value);
+        StewardessDto MapStewadress(Stewardess value);
+        Stewardess MapStewadress(StewardessDto value);
 
         PlaneDto MapPlane(Plane value);
         Task<Plane> MapPlane(PlaneDto value);
@@ -37,8 +37,8 @@ namespace BSA2018_Hometask4.BLL.Interfaces
 
         List<Crew> MapCrewApi(List<APICrewDto> ApiCrewDtos);
         Pilot MapPilotApi(APIPilotDto pilot);
-        Stewadress MapStewadressApi(APIStewardessDto stewardess);
-        List<Stewadress> MapStewadressesApi(List<APIStewardessDto> stewardesses);
+        Stewardess MapStewadressApi(APIStewardessDto stewardess);
+        List<Stewardess> MapStewadressesApi(List<APIStewardessDto> stewardesses);
        
     }
 }
